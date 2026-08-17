@@ -59,31 +59,29 @@ $rows = mysqli_stmt_get_result($stmt);
     <div class="main-content">
         <?php include 'includes/topbar.php'; ?>
         <div class="page-body">
-            <div class="table-card">
-                <div class="table-header">
-                    <h2>Expense Categories</h2>
-                    <button class="btn btn-primary" onclick="openCatModal()">+ Add category</button>
-                </div>
+            <div class="table-header">
+                <h2>Expense Categories</h2>
+                <button class="btn btn-primary" onclick="openCatModal()">+ Add category</button>
+            </div>
 
-                <?php if ($error): ?>
-                    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-                <?php endif; ?>
+            <?php if ($error): ?>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
 
-                <div class="category-grid">
-                    <?php while ($c = mysqli_fetch_assoc($rows)): ?>
-                    <div class="category-chip">
-                        <span><?= htmlspecialchars($c['name']) ?></span>
-                        <div>
-                            <span class="action-link edit" onclick='openCatModal(<?= json_encode($c) ?>)'>Edit</span>
-                            <form method="POST" style="display:inline" onsubmit="return confirm('Delete this category?');">
-                                <input type="hidden" name="category_id" value="<?= $c['id'] ?>">
-                                <span class="action-link delete" onclick="this.parentNode.submit()">Delete</span>
-                                <input type="hidden" name="delete_category" value="1">
-                            </form>
-                        </div>
+            <div class="category-grid">
+                <?php while ($c = mysqli_fetch_assoc($rows)): ?>
+                <div class="category-chip">
+                    <span><?= htmlspecialchars($c['name']) ?></span>
+                    <div class="chip-actions">
+                        <span class="action-link edit" onclick='openCatModal(<?= json_encode($c) ?>)'>Edit</span>
+                        <form method="POST" style="display:inline" onsubmit="return confirm('Delete this category?');">
+                            <input type="hidden" name="category_id" value="<?= $c['id'] ?>">
+                            <span class="action-link delete" onclick="this.parentNode.submit()">Delete</span>
+                            <input type="hidden" name="delete_category" value="1">
+                        </form>
                     </div>
-                    <?php endwhile; ?>
                 </div>
+                <?php endwhile; ?>
             </div>
         </div>
     </div>
