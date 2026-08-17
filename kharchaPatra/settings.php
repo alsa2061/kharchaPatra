@@ -14,28 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_profile'])) {
         $first_name = trim($_POST['first_name']);
         $last_name  = trim($_POST['last_name']);
-        $email      = trim($_POST['email']);
 
-        if ($first_name === '' || $last_name === '' || $email === '') {
-            $profileError = "All fields are required.";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $profileError = "Please enter a valid email address.";
+        if ($first_name === '' || $last_name === '') {
+            $profileError = "Both fields are required.";
         } else {
-            // check email not used by another user
-            $chk = mysqli_prepare($conn, "SELECT id FROM users WHERE email=? AND id<>?");
-            mysqli_stmt_bind_param($chk, "si", $email, $user_id);
-            mysqli_stmt_execute($chk);
-            mysqli_stmt_store_result($chk);
-
-            if (mysqli_stmt_num_rows($chk) > 0) {
-                $profileError = "This email is already used by another account.";
-            } else {
-                $stmt = mysqli_prepare($conn, "UPDATE users SET first_name=?, last_name=?, email=? WHERE id=?");
-                mysqli_stmt_bind_param($stmt, "sssi", $first_name, $last_name, $email, $user_id);
-                mysqli_stmt_execute($stmt);
-                $_SESSION['first_name'] = $first_name;
-                $profileSuccess = "Profile updated successfully.";
-            }
+            $stmt = mysqli_prepare($conn, "UPDATE users SET first_name=?, last_name=? WHERE id=?");
+            mysqli_stmt_bind_param($stmt, "ssi", $first_name, $last_name, $user_id);
+            mysqli_stmt_execute($stmt);
+            $_SESSION['first_name'] = $first_name;
+            $profileSuccess = "Profile updated successfully.";
         }
     }
 
@@ -61,7 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $upd = mysqli_prepare($conn, "UPDATE users SET password=? WHERE id=?");
             mysqli_stmt_bind_param($upd, "si", $hashed, $user_id);
             mysqli_stmt_execute($upd);
-            $passwordSuccess = "Password changed successfully.";
+
+            // Force re-login with the new password for security
+            session_unset();
+            session_destroy();
+            header("Location: login.php?password_changed=1");
+            exit;
         }
     }
 }
@@ -100,10 +92,6 @@ $user = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
                             <label>Last Name</label>
                             <input type="text" name="last_name" value="<?= htmlspecialchars($user['last_name']) ?>" required>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
                     </div>
                     <button type="submit" name="update_profile" class="btn btn-primary">Save Changes</button>
                 </form>
