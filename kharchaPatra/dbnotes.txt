@@ -1,0 +1,234 @@
+CREATE DATABASE expense_tracker;
+
+USE expense_tracker;
+
+CREATE TABLE users(
+user_id INT AUTO_INCREMENT PRIMARY KEY,
+first_name VARCHAR(50),
+last_name VARCHAR(50),
+username VARCHAR(50) UNIQUE,
+email VARCHAR(100) UNIQUE,
+password VARCHAR(255),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    category_name VARCHAR(50) NOT NULL,
+    category_type ENUM('Income','Expense') NOT NULL,
+
+    FOREIGN KEY (user_id)
+    REFERENCES users(user_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE income (
+    income_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    category_id INT NOT NULL,
+
+    source VARCHAR(100) NOT NULL,
+
+    amount DECIMAL(10,2) NOT NULL,
+
+    description TEXT,
+
+    income_date DATE NOT NULL,
+
+    FOREIGN KEY (user_id)
+    REFERENCES users(user_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (category_id)
+    REFERENCES categories(category_id)
+    ON DELETE CASCADE
+);
+
+SELECT * FROM income;
+
+CREATE TABLE expenses (
+    expense_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+
+    category_id INT NOT NULL,
+
+    amount DECIMAL(10,2) NOT NULL,
+
+    description TEXT,
+
+    expense_date DATE NOT NULL,
+
+    FOREIGN KEY (user_id)
+    REFERENCES users(user_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (category_id)
+    REFERENCES categories(category_id)
+    ON DELETE CASCADE
+);
+
+SELECT * FROM expenses;
+
+CREATE TABLE reports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+
+    report_month VARCHAR(20) NOT NULL,
+
+    report_year YEAR NOT NULL,
+
+    total_income DECIMAL(10,2) DEFAULT 0,
+
+    total_expense DECIMAL(10,2) DEFAULT 0,
+
+    total_savings DECIMAL(10,2) DEFAULT 0,
+
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id)
+    REFERENCES users(user_id)
+    ON DELETE CASCADE
+);
+
+SELECT * FROM reports;
+
+
+
+kharchaPatra/
+
+assets/
+│
+├── css/
+│      style.css
+│      dashboard.css
+│
+├── js/
+│      script.js
+│
+├── images/
+│      logo.png
+│
+includes/
+│
+├── db.php
+├── header.php
+├── footer.php
+├── sidebar.php
+├── auth.php
+│
+index.php
+login.php
+register.php
+dashboard.php
+logout.php
+
+income.php
+expense.php
+category.php
+reports.php
+settings.php
+profile.php
+
+http://localhost/kharchaPatra/
+
+kharchaPatra/
+
+assets/
+│
+├── css/
+│      style.css
+│      dashboard.css
+│
+├── js/
+│      script.js
+│
+├── images/
+│
+includes/
+│
+├── db.php
+├── auth.php
+├── header.php
+├── sidebar.php
+├── footer.php
+│
+login.php
+register.php
+dashboard.php
+
+income.php
+expense.php
+category.php
+reports.php
+settings.php
+
+logout.php
+
+
+Phase 1
+----------
+✔ Login
+✔ Register
+✔ PHP Registration
+✔ PHP Login
+✔ Sessions
+✔ Logout
+
+Phase 2
+----------
+✔ Dashboard
+
+Phase 3
+----------
+✔ Income CRUD
+
+Phase 4
+----------
+✔ Expense CRUD
+
+Phase 5
+----------
+✔ Categories CRUD
+
+Phase 6
+----------
+✔ Reports
+✔ Charts
+
+Phase 7
+----------
+✔ Settings
+✔ Profile
+
+Phase 8
+----------
+✔ Validation
+✔ Security
+✔ Final Polish
+
+
+Background
+#F8F8F5
+
+Primary Green
+#90B791
+
+Dark Text
+#1F2A44
+
+Light Text
+#777777
+
+Input Background
+#F5F6FA
+
+White
+#FFFFFF
+
+
+
+
+
